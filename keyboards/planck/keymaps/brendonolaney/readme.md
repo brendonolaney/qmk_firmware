@@ -3,16 +3,7 @@
 1. Remove QWERTY and Colemak
 2. Remove Plover. Looks like this is a stenography thing that I will never use.
 3. Trim the adjust layer back. I prefer the default Oryx configuration
-4. Move CTRL to be dual function with ESC
-5. Bring back right shift and make it dual function with enter
-
-Potential future changes
-- Remove the arrow keys and have them activate new layers:
-  - ErgoMotion; macros that emulate the ergovim layout
-  - Numpad
-  - Bracket pad
-  - Revamp adjust layer, move it somewhere else and create THROUGH layer.
-
+4. Rename layers and add Nav, Function, and Media layers
 
 ## Notes
 
@@ -44,3 +35,4 @@ specific effect is mysterious to me.
 Terminal: https://docs.qmk.fm/#/feature_terminal?id=terminal
 TERM_ON and TERM_OFF terminal is a feature that allows you to use a text editor as a direct
 terminal to the keyboard.
+
