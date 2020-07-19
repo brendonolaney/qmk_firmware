@@ -1,8 +1,8 @@
 #pragma once
 
 #define ORYX_CONFIGURATOR
-#define PLANCK_EZ_LED_LOWER 1
-#define PLANCK_EZ_LED_RAISE 2
+#define PLANCK_EZ_LED_LOWER 2
+#define PLANCK_EZ_LED_RAISE 3
 #define PLANCK_EZ_LED_ADJUST 7
 
 #ifdef AUDIO_ENABLE
