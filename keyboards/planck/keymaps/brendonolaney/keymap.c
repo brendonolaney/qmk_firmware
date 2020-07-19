@@ -18,8 +18,7 @@
 #include QMK_KEYBOARD_H
 #include "muse.h"
 
-enum planck_layers
-{
+enum planck_layers {
     _BASE,
     _NAV,
     _NUM,
@@ -38,8 +37,7 @@ enum planck_layers
 #define MED MO(_MED)
 #define ADJ MO(_ADJ)
 
-enum nav_keycodes
-{
+enum nav_keycodes {
     NBOL = SAFE_RANGE,
     NEOL,
     NBWRD,
