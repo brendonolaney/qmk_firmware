@@ -198,64 +198,63 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     ),
 };
 
-layer_state_t layer_state_set_user(layer_state_t state)
-{
+layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _NUM, _SYM, _ADJ);
 };
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record)
-{
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(keycode) {
-    case NBOL:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)));
-        }
-        break;
-    case NEOL:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI(SS_TAP(X_RGHT)));
-        }
-        break;
-    case NBWRD:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LALT(SS_TAP(X_LEFT)));
-        }
-        break;
-    case NFWRD:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LALT(SS_TAP(X_RGHT)));
-        }
-        break;
-    case NBDWRD:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
-        }
-        break;
-    case NDWRD:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LSFT(SS_LALT(SS_TAP(X_RGHT))) SS_TAP(X_DEL));
-        }
-        break;
-    case NUNDO:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI("z"));
-        }
-        break;
-    case NCUT:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI("x"));
-        }
-        break;
-    case NCOPY:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI("c"));
-        }
-        break;
-    case NPASTE:
-        if (record->event.pressed) {
-            SEND_STRING(SS_LGUI("z"));
-        }
-        break;
+        case NBOL:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI(SS_TAP(X_LEFT)));
+            }
+            break;
+        case NEOL:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI(SS_TAP(X_RGHT)));
+            }
+            break;
+        case NBWRD:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT(SS_TAP(X_LEFT)));
+            }
+            break;
+        case NFWRD:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT(SS_TAP(X_RGHT)));
+            }
+            break;
+        case NBDWRD:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LALT(SS_TAP(X_BSPC)));
+            }
+            break;
+        case NDWRD:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LSFT(SS_LALT(SS_TAP(X_RGHT))) SS_TAP(X_DEL));
+            }
+            break;
+        case NUNDO:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("z"));
+            }
+            break;
+        case NCUT:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("x"));
+            }
+            break;
+        case NCOPY:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("c"));
+            }
+            break;
+        case NPASTE:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("z"));
+            }
+            break;
     }
     return true;
 }
+
