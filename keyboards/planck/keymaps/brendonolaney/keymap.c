@@ -26,6 +26,7 @@ enum planck_layers {
     _BRC,
     _FNC,
     _MED,
+    _PLV,
     _ADJ,
 };
 
@@ -48,6 +49,8 @@ enum nav_keycodes {
     NCUT,
     NCOPY,
     NPASTE,
+    PLOVER,
+    EXT_PLV,
 };
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -176,14 +179,30 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
         _______, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, XXXXXXX, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
-
+    /* Plover layer (http://opensteno.org)
+    * ,-----------------------------------------------------------------------------------.
+    * |   #  |   #  |   #  |   #  |   #  |   #  |   #  |   #  |   #  |   #  |   #  |   #  |
+    * |------+------+------+------+------+------+------+------+------+------+------+------|
+    * |      |   S  |   T  |   P  |   H  |   *  |   *  |   F  |   P  |   L  |   T  |   D  |
+    * |------+------+------+------+------+------+------+------+------+------+------+------|
+    * |      |   S  |   K  |   W  |   R  |   *  |   *  |   R  |   B  |   G  |   S  |   Z  |
+    * |------+------+------+------+------+------+------+------+------+------+------+------|
+    * | Exit |      |      |   A  |   O  |             |   E  |   U  |      |      |      |
+    * `-----------------------------------------------------------------------------------'
+    */
+    [_PLV] = LAYOUT_planck_grid(
+        KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1,    KC_1   ,
+        XXXXXXX, KC_Q,    KC_W,    KC_E,    KC_R,    KC_T,    KC_Y,    KC_U,    KC_I,    KC_O,    KC_P,    KC_LBRC,
+        XXXXXXX, KC_A,    KC_S,    KC_D,    KC_F,    KC_G,    KC_H,    KC_J,    KC_K,    KC_L,    KC_SCLN, KC_QUOT,
+        EXT_PLV, XXXXXXX, XXXXXXX, KC_C,    KC_V,    XXXXXXX, XXXXXXX, KC_N,    KC_M,    XXXXXXX, XXXXXXX, XXXXXXX
+    ),
     /* Adjust
     * ,-----------------------------------------------------------------------------------.
     * |      |      |      |      | Reset|      |      |EEPRes|      |      |      |      |
     * |------+------+------+------+------+------+------+------+------+------+------+------|
     * |      |      |Aud on|Audoff|Audtog|      |      | RGB  |Brght+|Brght-|      |      |
     * |------+------+------+------+------+------+------+------+------+------+------+------|
-    * |      |      |Mus on|Musoff|Mustog|      |      |RGBMod| Hue+ | Hue- |      |      |
+    * |      |      |Mus on|Musoff|Mustog|      | plv  |RGBMod| Hue+ | Hue- |      |      |
     * |------+------+------+------+------+------+------+------+------+------+------+------|
     * |      |      |      |      |      |             |      |      |      |      |      |
     * `-----------------------------------------------------------------------------------'
@@ -191,7 +210,7 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [_ADJ] = LAYOUT_planck_grid(
         KC_TAB,  XXXXXXX, XXXXXXX, XXXXXXX, RESET,   XXXXXXX, XXXXXXX, EEP_RST, XXXXXXX, XXXXXXX, XXXXXXX, KC_BSPC,
         _______, XXXXXXX, AU_ON,   AU_OFF,  AU_TOG,  XXXXXXX, XXXXXXX, RGB_TOG, RGB_VAI, RGB_VAD, XXXXXXX, _______,
-        _______, XXXXXXX, MU_ON,   MU_OFF,  MU_TOG,  XXXXXXX, XXXXXXX, RGB_MOD, RGB_HUI, RGB_HUD, XXXXXXX, _______,
+        _______, XXXXXXX, MU_ON,   MU_OFF,  MU_TOG,  XXXXXXX, PLOVER , RGB_MOD, RGB_HUI, RGB_HUD, XXXXXXX, _______,
         _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______, _______
     ),
 };
@@ -199,6 +218,12 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
 layer_state_t layer_state_set_user(layer_state_t state) {
   return update_tri_layer_state(state, _NUM, _SYM, _ADJ);
 };
+
+#ifdef AUDIO_ENABLE
+    float plover_song[][2]     = SONG(PLOVER_SOUND);
+    float plover_gb_song[][2]  = SONG(PLOVER_GOODBYE_SOUND);
+#endif
+
 
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     switch(keycode) {
@@ -252,6 +277,34 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
                 SEND_STRING(SS_LGUI("z"));
             }
             break;
+        case PLOVER:
+            if (record->event.pressed) {
+                #ifdef AUDIO_ENABLE
+                stop_all_notes();
+                PLAY_SONG(plover_song);
+                #endif
+                layer_off(_NUM);
+                layer_off(_SYM);
+                layer_off(_ADJ);
+                layer_on(_PLV);
+                if (!eeconfig_is_enabled()) {
+                    eeconfig_init();
+                }
+                keymap_config.raw = eeconfig_read_keymap();
+                keymap_config.nkro = 1;
+                eeconfig_update_keymap(keymap_config.raw);
+            }
+            return false;
+            break;
+        case EXT_PLV:
+            if (record->event.pressed) {
+                #ifdef AUDIO_ENABLE
+                PLAY_SONG(plover_gb_song);
+                #endif
+                layer_off(_PLV);
+            }
+            return false;
+        break;
     }
     return true;
 }
