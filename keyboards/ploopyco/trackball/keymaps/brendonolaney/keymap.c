@@ -17,14 +17,36 @@
  */
 #include QMK_KEYBOARD_H
 
+enum brendon_keycodes {
+    COPY = PLOOPY_SAFE_RANGE,
+    PASTE,
+};
 
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [0] = LAYOUT( /* Base */
         KC_BTN1, KC_BTN3, KC_BTN2,
-          KC_BTN4, LT(1, KC_BTN5)
+          COPY, MO(1)
     ),
     [1] = LAYOUT(
         DRAG_SCROLL, _______, _______,
-          _______, _______
+          PASTE, _______
     )
 };
+
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    switch(keycode) {
+        case COPY:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("c"));
+            }
+            return false;
+            break;
+        case PASTE:
+            if (record->event.pressed) {
+                SEND_STRING(SS_LGUI("v"));
+            }
+            return false;
+            break;
+    }
+    return true;
+}
